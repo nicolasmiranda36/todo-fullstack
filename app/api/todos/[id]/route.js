@@ -40,29 +40,26 @@ export async function DELETE(request, { params }) {
 }*/
 
 export async function DELETE(request, context) {
-    const idParam = context.params?.id;
 
-    console.log("Params:", context.params);
-    console.log("ID", idParam);
+    const { id } = await context.params; 
+    console.log("ID recibido:", id);
+    const idNumber = parseInt(id);
 
-    const id = parseInt(idParam);
-
-    if (isNaN(id)) {
-        return NextResponse.json(
+    if (isNaN(idNumber)) {
+    return NextResponse.json(
         { error: "ID inválido" },
-        { status: 400 }
-        );
+        { status: 400 });
     }
 
     const { error } = await supabase
         .from("todos")
         .delete()
-        .eq("id", id);
+        .eq("id", idNumber);
 
     if (error) {
         return NextResponse.json(
-            { error: error.message },
-            { status: 500 }
+        { error: error.message },
+        { status: 500 }
     );
     }
 
